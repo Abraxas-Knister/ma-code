@@ -1,0 +1,40 @@
+# general
+twosite DMFT via ED
+then play with that and give bath more sites.
+then QC solution to general bath problemf 
+
+# twoside, kreula et al. 2016
+Hamiltonian is given by
+
+U n1u n1d  - mu(n1d + n1u) + ed n2d + eu n2u 
+ + V( c+1u c2u + c+2u c1u + c+1d c2d + c+2d c1d )
+
+here U, mu are given and e(d/u) and V are to be determined
+furthermore the Hamiltonian is INDEP of time
+
+Loop: 
+    * Set eu, ed, V
+    * Get Greensfunction iGs(t)_R  = D(t) < {cs(t), cs+(0)} > = < cs(t)cs+(0) 
+        + cs+(0)cs(t) > D(t), D(t) = { 1 t>0; 0 
+        # Need Groundstate ??
+    * Fourier Transfor to get G(w)
+    * Use Dyson to get S(w) = G0^-1 - G^-1, G0 = w+mu - DD(w), DD(w)
+        = V*V/(w-es)
+    * get V from S, get es from minimising |n-n_imp| (TODO: need to know what
+        this is and how we calculate it from G/S)
+    * Repeat, since V, eu, ed were updated
+
+ED for greenfunction of twoside DMFT:
+ * use four bit int as base vector mask
+ * fixed number of particles
+  -> 0000
+     0001, 0010, 0100, 1000
+     0011, 0101, 0110, 1001, 1010, 1100
+     0111, 1011, 1101, 1110
+     1111
+    serve
+ * implement C operator in schrödinger picture in that base
+ * get H from that
+ * get U from that.
+ * until now Hilbert space is only 16 dimensional if any numbers are allowed
+   -> matrix exponentiation can be done
