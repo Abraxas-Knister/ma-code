@@ -8,10 +8,15 @@
 bool areNear( double a, double b )
 // mostly relative comparison of floating point values
 {
+    MSG_2("near?");
     double diff = std::abs(a-b);
     bool ret { diff <= absEps };
-    if (ret) return true;
+    if (ret) {
+        MSG_1("abs near");
+        return true;
+    }
     ret = ( diff <= (std::max(std::abs(a), std::abs(b)) * relEps) );
+    MSG_2("rel near: " + std::to_string(ret) );
     return ret;
 }
 
