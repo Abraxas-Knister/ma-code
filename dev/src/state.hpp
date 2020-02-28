@@ -2,41 +2,34 @@
 #define STATE_HPP
 
 #include "config.hpp"
-#include <map>
-#include <vector>
 
+struct State;
 struct HilbertSpace
 {
-    std::vector<int>  base1;
-    std::map<int,int> ind1;
-    std::vector<int>  base2;
-    std::map<int,int> ind2;
-    /* these store the bases for the nofParticles and nofParticles+1 Hilbert
-     * spaces. One can acess the bitmask for the base state with a given index
-     * via base1/2.at(index) and get the index for the element via
-     * ind1/2[element]
+    state_t zero;
+    /* O stores an all zero vector in the nofParticles, +0,+1,+2 spaces
+     * This is needed to be able to store the regal base elements of states when
+     * one has a particle conserving Interaction and only wants to calculate two
+     * point functions.
      */
     HilbertSpace(const int N, const int O);
-    int Cd(const int &orbital, int &baseIndex) const;
-    int  C(const int &orbital, int &baseIndex) const;
+    int Cd(const int &orbital, int &conf) const;
+    int  C(const int &orbital, int &conf) const;
     /* these calculate the result of acting with the creator/annihilator for
-     * orbital with number "orbital" on the base element with number
-     * "baseIndex".
+     * orbital with number "orbital" on the base element with configuration
+     * "conf", modifying the conf in the process.
      *
      * they give back the sign of the resulting base element and store the base
      * Index the baseIndex variable. 0 is returned if the operator destroys the
      * state.
-     *
-     * the base element is taken from the respective subspace (ie nofParticles
-     * HilbertSpace for Cd and nofParticle+1 HilberSpace for C)
      */
 };
 
 struct State
 {
     HilbertSpace *domain;
-    std::vector<complex> data1;
-    std::vector<complex> data2;
+    state_t data;
+    State (HilbertSpace &);
     void Cd(const int orb);
     void  C(const int orb);
 };

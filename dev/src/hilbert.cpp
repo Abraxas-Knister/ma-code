@@ -1,27 +1,19 @@
 #include "state.hpp"
 
 int bitsSetIn(const int &);
-void createBase(const int,const int,std::vector<int> &,std::map<int,int> &);
 
 HilbertSpace::HilbertSpace(const int N, const int O)
 {
-    createBase(N  ,O,base1,ind1);
-    createBase(N+1,O,base2,ind2);
-}
-
-void createBase(const int N, const int O, std::vector<int> &b, std::map<int,int> &i)
-{
-    b.clear(); i.clear();
+    state_t zeroState{};
     int j = (1<<N) - 1;
-    const int last = j << (O - N);
-    int ct=0;
+    const int last = ((1 << (N+2)) - 1) << (O - N - 2);
+    int ct {};
     do {
-        if (bitsSetIn(j) == N)
-        {
-            b.push_back(j);
-            i[j] = ct++;
-        }
+        ct = bitsSetIn(j);
+        if ((ct == N) || (ct == (N+1)) || (ct == (N+2)))
+           { zeroState[j]=0; }
     } while (j++ != last);
+    zero = zeroState;
 }
 
 int bitsSetIn(const int &j)
@@ -31,30 +23,28 @@ int bitsSetIn(const int &j)
     return ret;
 }
 
-int HilbertSpace::Cd(const int &orbital, int &baseIndex) const
+int HilbertSpace::Cd(const int &orbital, int &conf) const
 {
-    const int element = base1[baseIndex];
     const int msk = 1 << orbital;
     int sg {0};
-    if (! (element & msk) )
+    if (! (conf & msk) )
     {
-        baseIndex = ind2.at(element | msk);
-        int nofJumped = bitsSetIn( element & (msk -1) );
-        sg = 1-(nofJumped & 1)*2;
+        int nofJumped = bitsSetIn(conf & (msk - 1));
+        sg = 1 - (nofJumped & 1)*2;
+        conf |= msk;
     }
     return sg;
 }
 
-int HilbertSpace::C(const int &orbital, int &baseIndex) const
+int HilbertSpace::C(const int &orbital, int &conf) const
 {
-    const int element = base2[baseIndex];
     const int msk = 1 << orbital;
     int sg {0};
-    if (element & msk)
+    if (conf & msk)
     {
-        baseIndex = ind1.at(element & ~msk);
-        int nofJumped = bitsSetIn( element & (msk -1) );
-        sg = 1-(nofJumped & 1)*2;
+        int nofJumped = bitsSetIn(conf & (msk - 1));
+        sg = 1 - (nofJumped & 1)*2;
+        conf &= ~msk;
     }
     return sg;
 }
