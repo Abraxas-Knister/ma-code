@@ -29,7 +29,7 @@ void writeDebug(const std::string &f)
     log.close();
 }
 
-int debugMsgID()
+unsigned debugMsgID()
 {
     static unsigned ID{0};
     return ID++;

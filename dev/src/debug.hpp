@@ -3,7 +3,7 @@
 
 #include <string>
 void writeDebug(const std::string &f);
-int debugMsgID();
+unsigned debugMsgID();
 extern std::string debugString;
 
 #ifdef DEBUG_0
