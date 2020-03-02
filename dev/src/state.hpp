@@ -6,6 +6,7 @@
 struct State;
 struct HilbertSpace
 {
+    int nofParticles;
     state_t zero;
     /* O stores an all zero vector in the nofParticles, +0,+1,+2 spaces
      * This is needed to be able to store the regal base elements of states when
