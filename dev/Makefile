@@ -1,5 +1,5 @@
 CC = g++
-OP = -I $(PWD)/src -pedantic-errors -fmax-errors=5 -Wall -Wextra -Wsign-conversion -std=c++17 -O3 -march=native -fopenmp
+OP = -I $(PWD)/src -pedantic-errors -fmax-errors=5 -Wall -Wextra -std=c++17 -O3 -march=native -fopenmp
 SRC = $(shell ls src/*.cpp)
 OBJ = $(SRC:%.cpp=%.o)
 MN = $(shell ls main/*.hpp)

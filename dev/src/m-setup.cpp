@@ -3,6 +3,7 @@
 Setup::Setup(const double iniU, const double iniV)
 {
     this->updateH(iniU, iniV);
+    state = this->gdstate();
 }
 
 int sg(int msk, int orb);
@@ -41,7 +42,7 @@ void Setup::updateH (const double newU, const double newV)
     H.swap(tmp);
 }
 
-int sg(int msk, int orb)
+inline int sg(int msk, int orb)
 {
     bool has = msk & (1<<orb);
     return 1-2*has;

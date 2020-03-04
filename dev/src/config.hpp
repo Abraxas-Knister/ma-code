@@ -9,6 +9,7 @@
 
 // typedefs
 using complex = std::complex<double>;
+constexpr complex IU = std::complex<double>{0,1};
 using state_t = std::map<int,complex>;
 
 // globals

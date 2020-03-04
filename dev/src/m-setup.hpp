@@ -30,6 +30,7 @@ struct Setup
     void actWithC(const int orb);
     void actWithCd(const int orb);
     void updateH(const double newU, const double newV);
+    m_state_t gdstate() const;
 };
 
 #endif // guard
