@@ -1,15 +1,19 @@
 #include "config.hpp"
+#include "m-setup.hpp"
+#include "greensfunction.hpp"
+#include <iomanip>
+#include <iostream>
+
+
 
 int main ()
 {
 // GREENS FUNCTION -> quantum device??
-    // initialise Hamiltonian
-    // initialise state
-    // apply creator
-    // forward evolve
-    // apply annihilator
-    // backwards evolve
-    // make dot product with initial state
+    Setup s(1,1);
+    m_gf G(s);
+    G.compute();
+    std::cout << std::setprecision(15);
+    std::cout << G;
 // GET SELF ENERGY
 // GET PARAMETERS (SELF CONSISTENCY)
 // CHECK CONVERGENCE
