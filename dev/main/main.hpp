@@ -1,10 +1,8 @@
 #include "config.hpp"
-#include "m-setup.hpp"
 #include "greensfunction.hpp"
+#include "m-setup.hpp"
 #include <iomanip>
 #include <iostream>
-
-
 
 int main ()
 {
