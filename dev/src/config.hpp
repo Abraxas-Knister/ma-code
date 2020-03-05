@@ -15,6 +15,6 @@ using state_t = std::map<int,complex>;
 // globals
 constexpr double relEps {1e-8};
 constexpr double absEps {1e-14};
-bool areNear( double a, double b );
+bool areNear( double a, double b=absEps);
 
 #endif

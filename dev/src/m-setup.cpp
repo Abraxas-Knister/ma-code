@@ -2,12 +2,12 @@
 
 Setup::Setup(const double iniU, const double iniV)
 {
-    this->updateH(iniU, iniV);
+    this->update(iniU, iniV);
     state = this->gdstate();
 }
 
 int sg(int msk, int orb);
-void Setup::updateH (const double newU, const double newV)
+void Setup::update (const double newU, const double newV)
 {
     U=newU;
     V=newV;

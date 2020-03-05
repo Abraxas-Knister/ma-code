@@ -29,7 +29,7 @@ struct Setup
     void evolve(const double t);
     void actWithC(const int orb);
     void actWithCd(const int orb);
-    void updateH(const double newU, const double newV);
+    void update(const double newU, const double newV);
     m_state_t gdstate() const;
 };
 

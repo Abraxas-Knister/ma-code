@@ -17,6 +17,7 @@ struct m_gf
     m_gf(Setup &);
     void compute(const double step=0.1, const int counts=1000);
     friend std::ostream& operator<< (std::ostream &out, const m_gf &gf);
+    void iterate();
 };
 
 #endif // guard
