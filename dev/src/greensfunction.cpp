@@ -1,18 +1,20 @@
 #include "greensfunction.hpp"
+#include <unsupported/Eigen/FFT> 
 
 m_gf::m_gf(Setup &s)
 {
     setup = &s;
 }
 
-void m_gf::compute(const double begin, const double end, const double step)
+void m_gf::compute(const double step, const int counts)
 {
-    time.clear(); timedep0.clear(); timedep1.clear(); freqdep0.clear(); freqdep1.clear();
-    m_state_t gd = setup->gdstate();
+    time.clear(); timedep0.clear(); timedep1.clear();
+    const m_state_t gd = setup->gdstate();
     for (int orb = 0; orb < 2; orb++ )
     {
-        for (double t=begin; t<end; t+=step)
+        for (int i=0; i<counts; i++)
         {
+            double t = i*step;
             // first Cd then C
             setup->state = gd;
             setup->actWithCd(orb);
@@ -37,6 +39,14 @@ void m_gf::compute(const double begin, const double end, const double step)
             }
         }
     }
+
+    freq.clear(); freqdep0.clear(); freqdep1.clear();
+    Eigen::FFT<double> fft;
+    fft.fwd(freqdep0,timedep0);
+    fft.fwd(freqdep1,timedep1);
+    const double f = 1.0/step;
+    const double fmin = -counts*f*0.5;
+    for (int i=0; i<counts; i++) { freq.push_back(fmin + i*f); }
 }
 
 std::ostream& operator<< (std::ostream &out, const m_gf &gf)
@@ -45,7 +55,10 @@ std::ostream& operator<< (std::ostream &out, const m_gf &gf)
     {
         out << gf.time[i] << ' ' 
             << gf.timedep0[i].real() << ' ' << gf.timedep0[i].imag() << ' '
-            << gf.timedep1[i].real() << ' ' << gf.timedep1[i].imag() << '\n';
+            << gf.timedep1[i].real() << ' ' << gf.timedep1[i].imag() << ' '
+            << gf.freq[i] << ' ' 
+            << gf.freqdep1[i].real() << ' ' << gf.freqdep1[i].imag() << ' '
+            << gf.freqdep1[i].real() << ' ' << gf.freqdep1[i].imag() << '\n';
     }
     return out;
 }
