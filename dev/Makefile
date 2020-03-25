@@ -5,7 +5,7 @@ OBJ = $(SRC:%.cpp=%.o)
 MN = $(shell ls main/*.hpp)
 DEPFILE = .depend
 
-.PHONY: all clean dep
+.PHONY: all clean dep test
 .PRECIOUS: %.o
 
 all: $(MN:%.hpp=%.prog)
@@ -26,3 +26,6 @@ dep:
 	echo '#include "'$<'"' > main.cpp
 	$(CC) $(OP) $(OBJ) main.cpp -o $@
 	rm main.cpp
+
+test: $(SRC)
+	$(CC) $(OP) $(OBJ) test/qbit.cpp -o test/qbit.test
