@@ -10,7 +10,7 @@ m_state_t Setup::gdstate() const
     {
         if (checktwo(solver.eigenvectors(),i)) return solver.eigenvectors().col(i);
     }
-    MSG_1("Couldn't find groundstate with two particles.");
+    throw "Couldn't find groundstate with two particles.";
 }
 
 bool checktwo(const m_operator_t &m, const int col)
