@@ -29,3 +29,4 @@ dep:
 
 test: $(SRC)
 	$(CC) $(OP) $(OBJ) test/qbit.cpp -o test/qbit.test
+	$(CC) $(OP) $(OBJ) test/qcrig.cpp -o test/qcrig.test
