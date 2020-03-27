@@ -11,7 +11,6 @@ void Qbit::renorm()
     if (!*this)
           return;
     double norm = 1.0/std::sqrt( std::norm(m_up) + std::norm(m_dw) );
-    std::cout << norm << '\n';
     m_up *= norm;
     m_dw *= norm;
 }
