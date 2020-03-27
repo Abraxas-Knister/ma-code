@@ -3,6 +3,8 @@
 #include <iomanip> 
 #include <iostream>
 
+using namespace QC;
+
 int main()
 {
     std::cerr << std::setprecision(3) << std::showpos;

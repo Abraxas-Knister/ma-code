@@ -4,6 +4,8 @@
 #include <cmath> 
 #include <iostream>
 
+using namespace QC;
+
 void Qbit::renorm()
 {
     if (!*this)
@@ -36,6 +38,26 @@ Qbit& Qbit::Y()
 Qbit& Qbit::Z()
 {
     m_up *= -1.0;
+    return *this;
+}
+
+Qbit& Qbit::M()
+{
+    /* X - i Y (d , u)
+     * = (u , d) - i (-i u , i d)
+     * = (u , d) - (u , -d)
+     * = (0 , 2d)
+     * M(d,u) = (0,d)
+     */
+    m_up = 0.0;
+    std::swap(m_up,m_dw);
+    return *this;
+}
+
+Qbit& Qbit::P()
+{
+    m_dw = 0.0;
+    std::swap(m_up,m_dw);
     return *this;
 }
 

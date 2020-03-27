@@ -4,30 +4,44 @@
 
 #include <iostream>
 
-class Qbit
+namespace QC {class Qbit;}
+std::ostream& operator<< (std::ostream&, const QC::Qbit&);
+
+namespace QC
 {
-    complex m_up;
-    complex m_dw;
-    void renorm();
-public:
-    Qbit(complex dw=0.0, complex up=0.0)
-        : m_up(up), m_dw(dw)
+    // class Unitary;
+    class Qbit
     {
-        renorm();
-    }
-    Qbit (double dw,double up)
-        : Qbit(static_cast<complex>(dw) , up)
-    {}
+        complex m_up;
+        complex m_dw;
+        void renorm();
+    public:
+        Qbit(complex dw=0.0, complex up=0.0)
+            : m_up(up), m_dw(dw)
+        {
+            renorm();
+        }
+        Qbit (double dw,double up)
+            : Qbit(static_cast<complex>(dw) , up)
+        {}
 
-    operator bool ();
+        operator bool ();
 
-    Qbit& X ();
-    Qbit& Y ();
-    Qbit& Z ();
-    Qbit& H ();
+        Qbit& X ();  // Pauli matrices
+        Qbit& Y ();
+        Qbit& Z ();
 
-    friend
-    std::ostream& operator<< (std::ostream& out , const Qbit&);
-};
+        Qbit& M ();  // "Minus" = X - i Y
+        Qbit& P ();  // "Plus"  = X + i Y
+        Qbit& H ();
+        //Qbit& U (complex,complex,complex,complex); generic unitary
+
+        friend
+        std::ostream& (::operator<<) (std::ostream&, const QC::Qbit&);
+    };
+
+    static const Qbit O { 1.0 , 0.0 };
+    static const Qbit I { 0.0 , 1.0 };
+}
 
 #endif // guard
