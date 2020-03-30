@@ -2,34 +2,40 @@
 #define QC_HPP
 #include "config.hpp"
 
-#include "qbit.hpp"
+#include <iostream>
+
+namespace QC {class Rig;}
+std::ostream& operator<< (std::ostream&,const QC::Rig&);
 
 namespace QC
 {
     class Rig
     {
-        Qbit * m_mem;
-        int m_size;
-        void oob (int);
+        const int m_bits;
+        const int m_length;
+        complex * m_memory;
+        void oob(int index);
+        void loop(int,void (*)(complex&,complex&));
     public:
         Rig(int);
         virtual ~Rig();
 
+        friend
+        std::ostream& (::operator<<) (std::ostream&,const Rig&);
+
+        // Paulis
         Rig& X(int);
         Rig& Y(int);
         Rig& Z(int);
 
+        // Hadamard and plus, minus
+        Rig& H(int);
         Rig& M(int);
         Rig& P(int);
-        Rig& H(int);
-        // Rig& U(int,Unitary);
 
-        // Jordan Wigner creator/annihilator
-        Rig& JWA(int);
-        Rig& JWC(int);
-
-        const Qbit& get(int index) { oob(index); return m_mem[index]; }
-        int size() { return m_size; }
+        // creation and annihilation of spin up/dw
+        Rig& A(int);
+        Rig& C(int);
     };
 }
 
