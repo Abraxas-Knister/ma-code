@@ -21,14 +21,22 @@ Rig::Rig(int size)
           throw std::runtime_error("Trying to create empty quantum rig");
 
     m_memory = new complex[m_length];
-    for (int i=0; i < m_length; ++i )
-          m_memory[i] = 0.0;
-    m_memory[0] = 1.0 ;
+    set();
 }
 
 Rig::~Rig()
 {
     delete[] m_memory;
+}
+
+Rig& Rig::set(int mask)
+{
+    if (mask<0 && mask>= m_length)
+          throw std::runtime_error("Can't set the mask");
+    for (int i=0; i < m_length; ++i )
+          m_memory[i] = 0.0;
+    m_memory[mask] = 1.0 ;
+    return *this;
 }
 
 void Rig::loop(int index, void (*f)(complex&,complex&))

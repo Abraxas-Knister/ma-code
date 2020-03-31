@@ -4,7 +4,7 @@
 
 #include <iostream>
 
-namespace QC {class Rig;}
+namespace QC { class Rig; }
 std::ostream& operator<< (std::ostream&,const QC::Rig&);
 
 namespace QC
@@ -16,9 +16,12 @@ namespace QC
         complex * m_memory;
         void oob(int index);
         void loop(int,void (*)(complex&,complex&));
+        void ctrl(int, void (*)(complex&,complex&), int, bool);
     public:
         Rig(int);
         virtual ~Rig();
+
+        Rig& set(int=0);
 
         friend
         std::ostream& (::operator<<) (std::ostream&,const Rig&);
@@ -36,6 +39,10 @@ namespace QC
         // creation and annihilation of spin up/dw
         Rig& A(int);
         Rig& C(int);
+
+        // Controlled gates
+        Rig& CZ(int,int,bool=true);
+        Rig& CR(int,double,int,bool=true);
     };
 }
 
