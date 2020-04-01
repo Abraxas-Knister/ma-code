@@ -20,6 +20,6 @@ using namespace QC;
  * printing
  */
 #include "qc-gates.inl"
-/* X Y Z H M P A C -- single
+/* X Y Z H M P A C R-- single
  * CZ CR -- two 
  */

@@ -40,6 +40,9 @@ namespace QC
         Rig& A(int);
         Rig& C(int);
 
+        // rotation
+        Rig& R(int,double,Rig& (Rig::*)(int)=&Rig::Z);
+
         // Controlled gates
         Rig& CZ(int,int,bool=true);
         Rig& CR(int,double,int,bool=true);

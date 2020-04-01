@@ -39,8 +39,7 @@ void _H (complex& up, complex& dw)
 namespace QC { double _rotation; }
 void _R(complex &up,complex&)
 {
-    static const double pi = std::acos(-1);
-    up *= std::exp(_rotation*pi*IU);
+    up *= std::exp(_rotation*PI*IU);
 }
 
 std::string bin(int m, int width)

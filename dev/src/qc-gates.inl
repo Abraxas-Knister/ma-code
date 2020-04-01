@@ -48,6 +48,22 @@ Rig& Rig::C(int index)
           Z(i);
     return *this;
 }
+// rotation
+Rig& Rig::R(int index, double pimul, Rig& (Rig::*pauli)(int))
+{
+    const auto cos = std::cos(PI*pimul);
+    const auto sin = IU*std::sin(PI*pimul);
+
+    complex *copy = new complex[m_length];
+    for (int i=0; i<m_length; ++i)
+          copy[i] = m_memory[i];
+
+    (this->*pauli)(index);
+    for (int i=0; i<m_length; ++i) 
+          m_memory[i] = copy[i] * cos + m_memory[i] * sin;
+    delete[] copy;
+    return *this;
+}
 // === Two Bit ===
 // Controlled Z
 Rig& Rig::CZ(int index,int by, bool ifset)
