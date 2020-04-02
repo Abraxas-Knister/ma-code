@@ -16,6 +16,7 @@ using namespace QC;
  *
  * contructor, destructor
  * set function
+ * prob function
  * inner loops for the gates
  * printing
  */

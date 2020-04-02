@@ -22,6 +22,7 @@ namespace QC
         virtual ~Rig();
 
         Rig& set(int=0);
+        Rig& prob(int,double&,double&);
 
         friend
         std::ostream& (::operator<<) (std::ostream&,const Rig&);

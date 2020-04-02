@@ -11,6 +11,22 @@ Rig& Rig::set(int mask)
     m_memory[mask] = 1.0 ;
     return *this;
 }
+/* measure the Z projection of spin "index" without projecting
+ * load the double pup and pdw with the probabilities for up and dw
+ */
+Rig& Rig::prob(int index, double& up, double& dw)
+{
+    oob(index);
+    up=0.0;
+    int mask = 1 << index;
+    for (int i=0; i<m_length; ++i)
+    {
+        if (i & mask)
+              up+=std::norm(m_memory[i]);
+    }
+    dw=1.0-up;
+    return *this;
+}
 // bounds check
 void Rig::oob(int index)
 {
