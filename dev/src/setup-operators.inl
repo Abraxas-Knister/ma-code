@@ -1,9 +1,6 @@
-#include "m-setup.hpp"
-#include <unsupported/Eigen/MatrixFunctions>
-
-void Setup::actWithC(const int orb)
+Setup::state_t Setup::C(const Setup::state_t& state, const int orb) const
 {
-    m_state_t tmp = m_state_t::Zero();
+    state_t tmp = state_t::Zero();
     if (orb == 0)
     {
         for (int i=0; i<16; i++)
@@ -19,12 +16,12 @@ void Setup::actWithC(const int orb)
             if (i&2) { tmp(i-2) += sg*state(i); }
         }
     }
-    state.swap(tmp);
+    return tmp;
 }
 
-void Setup::actWithCd(const int orb)
+Setup::state_t Setup::Cd(const Setup::state_t& state, const int orb) const
 {
-    m_state_t tmp = m_state_t::Zero();
+    state_t tmp = state_t::Zero();
     if (orb == 0)
     {
         for (int i=0; i<16; i++)
@@ -40,12 +37,10 @@ void Setup::actWithCd(const int orb)
             if (!(i&2)) { tmp(i+2) += sg*state(i); }
         }
     }
-    state.swap(tmp);
+    return tmp;
 }
 
-void Setup::evolve(const double t)
+Setup::operator_t Setup::evolve(const double t) const
 {
-    m_state_t tmp;
-    tmp = (-H*t*IU).exp() * state;
-    state.swap(tmp);
+     return (- IU * H * t).exp();
 }

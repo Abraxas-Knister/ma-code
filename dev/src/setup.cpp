@@ -1,17 +1,19 @@
-#include "m-setup.hpp"
+#include "setup.hpp"
 
-Setup::Setup(const double iniU, const double iniV)
-{
-    this->update(iniU, iniV);
-    state = this->gdstate();
-}
+#include <cmath>
+#include <iostream> 
+#include <Eigen/Eigenvalues>
+#include <unsupported/Eigen/MatrixFunctions>
+
+#include "setup-operators.inl"
+#include "setup-gdstate.inl"
 
 int sg(int msk, int orb);
-void Setup::update (const double newU, const double newV)
+void Setup::set (const double newU, const double newV)
 {
     U=newU;
     V=newV;
-    m_operator_t tmp = m_operator_t::Zero();  
+    operator_t tmp = operator_t::Zero();  
     int j {};
     for (int i = 0; i<16; i++ )
     {
@@ -40,8 +42,8 @@ void Setup::update (const double newU, const double newV)
         }
     }
     H.swap(tmp);
+    setGdstate();
 }
-
 inline int sg(int msk, int orb)
 {
     bool has = msk & (1<<orb);

@@ -1,7 +1,8 @@
 #include "config.hpp"
 
-#include "greensfunction.hpp"
-#include "m-setup.hpp"
+#include "green.hpp"
+#include "setup.hpp"
+
 #include <fstream>
 #include <iomanip>
 #include <iostream>
@@ -10,31 +11,29 @@
 int main ()
 {
 // GREENS FUNCTION -> quantum device??
-    Setup s(1,1e4);
-    m_gf G(s);
+    double U=1.0,V=1e4;
+    double oldV=V*10;
+    Setup s(U,V);
+    green G(s);
     G.compute();
 // GET SELF ENERGY
 // GET PARAMETERS (SELF CONSISTENCY)
 // CHECK CONVERGENCE
 // UPDATE HAMILTONIAN AND REDO
-    double oldV = s.V*10;
-    std::vector<double> vs;
-    while (!areNear(s.V,oldV))
+    std::vector<double> vv;
+    while (!areNear(V,oldV,1e-5))
     {
-        oldV = s.V;
-        vs.push_back(oldV);
-        G.iterate();
+        oldV = V;
+
+        G.ckparams(U,V);
+        s.set(U,V);
+        G.compute();
+
+        vv.push_back(V);
     }
-    vs.push_back(oldV);
     std::cout << std::setprecision(15);
     std::cout << G;
-    std::ofstream f("vs",std::ofstream::out);
-    f << std::setprecision(15);
-    for (int i=0;i<vs.size(); i++)
-    {
-        f << vs[i] << '\n';
-    }
-    f.close(); 
-    std::cout << G;
+    std::cerr << std::setprecision(15);
+    for (auto i:vv) std::cerr << i <<'\n';
     return 0;
 }
