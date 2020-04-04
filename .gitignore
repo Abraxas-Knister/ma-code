@@ -1,6 +1,1 @@
 *.swp
-
-*.o
-*.prog
-
-dev/.depend
