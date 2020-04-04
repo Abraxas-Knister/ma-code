@@ -5,7 +5,7 @@ OBJ = $(SRC:%.cpp=%.o)
 MN = $(shell ls main/*.hpp)
 DEPFILE = .depend
 
-.PHONY: all clean dep test
+.PHONY: all clean dep test plot
 .PRECIOUS: %.o
 
 all: $(MN:%.hpp=%.prog)
@@ -30,3 +30,7 @@ dep:
 test: $(SRC)
 	$(CC) $(OP) $(OBJ) test/qbit.cpp -o test/qbit.test
 	$(CC) $(OP) $(OBJ) test/qcrig.cpp -o test/qcrig.test
+
+plot:
+	cd plot ;\
+	./mat.plt

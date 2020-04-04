@@ -5,25 +5,27 @@
 
 #include <fstream>
 #include <iomanip>
+#include <iostream> 
 #include <vector>
 
 int main ()
 {
     // GREENS FUNCTION -> quantum device??
-    double U=1.0,V=1e4;
+    double U=1.0,V=0.01;
     double oldV=V*10;
     Setup s(U,V);
     green G(s);
-    G.compute();
+    double step = 5e-8; int count = 1000000;
+    G.compute(step,count);
 
     std::vector<double> vv;
-    while (!areNear(V,oldV,1e-6)) // CHECK CONVERGENCE
+    while (!areNear(V,oldV,1e-5)) // CHECK CONVERGENCE
     {
         oldV = V;
 
         G.ckparams(U,V); // GET SELF ENERGY GET PARAMETERS (SELF CONSISTENCY)
         s.set(U,V); // UPDATE HAMILTONIAN AND REDO
-        G.compute();
+        G.compute(step,count);
 
         vv.push_back(V);
     }
