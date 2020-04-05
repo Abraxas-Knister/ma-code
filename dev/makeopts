@@ -1,0 +1,2 @@
+CC  = g++
+OP  = -pedantic-errors -fmax-errors=5 -Wall -Wextra -std=c++17 -O3 -march=native

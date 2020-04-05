@@ -1,7 +1,7 @@
-#include "config.hpp"
+#include "../src/config.hpp"
 
-#include "green.hpp"
-#include "setup.hpp"
+#include "../src/green.hpp"
+#include "../src/setup.hpp"
 
 #include <fstream>
 #include <iomanip>

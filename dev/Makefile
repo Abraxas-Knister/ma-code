@@ -1,36 +1,19 @@
-CC = g++
-OP = -I $(PWD)/src -pedantic-errors -fmax-errors=5 -Wall -Wextra -std=c++17 -O3 -march=native -fopenmp
-SRC = $(shell ls src/*.cpp)
-OBJ = $(SRC:%.cpp=%.o)
-MN = $(shell ls main/*.hpp)
-DEPFILE = .depend
+.PHONY: all clean dep plot
 
-.PHONY: all clean dep test plot
-.PRECIOUS: %.o
-
-all: $(MN:%.hpp=%.prog)
+all:
+	cd src;  make
+	cd test; make
+	cd main; make
 
 clean:
-	-rm main/*.prog
-	-rm src/*.o
+	cd src;  make clean
+	cd test; make clean
+	cd main; make clean
 
 dep:
-	-$(CC) -MM -I $(PWD)/src $(SRC) > $(DEPFILE)
-
--include $(DEPFILE)
-%.o: %.cpp
-	$(CC) $(OP) -c $< 
-	-mv *.o src/
-
-%.prog: %.hpp $(OBJ)
-	echo '#include "'$<'"' > main.cpp
-	$(CC) $(OP) $(OBJ) main.cpp -o $@
-	rm main.cpp
-
-test: $(SRC)
-	$(CC) $(OP) $(OBJ) test/qbit.cpp -o test/qbit.test
-	$(CC) $(OP) $(OBJ) test/qcrig.cpp -o test/qcrig.test
+	cd src;  make dep
+	cd test; make dep
+	cd main; make dep
 
 plot:
-	cd plot ;\
-	./mat.plt
+	cd plot; ./mat.plt
