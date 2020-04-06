@@ -2,7 +2,7 @@
 #define SETUP_HPP
 #include "config.hpp"
 
-#include <Eigen/Dense>
+#include <Eigen/Core>
 
 struct Setup
 {

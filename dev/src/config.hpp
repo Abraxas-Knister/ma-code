@@ -5,6 +5,7 @@
 #include <cmath> 
 #include <map>
 
+#define EIGEN_NO_DEBUG
 
 // typedefs
 using complex = std::complex<double>;
