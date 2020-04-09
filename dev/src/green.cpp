@@ -8,10 +8,10 @@
 green::green(Setup &s)
     : setup (s)
 {
-    time.reserve(200);
-    freq.reserve(200);
-    timedep.reserve(200);
-    freqdep.reserve(200);
+    time.reserve(2000);
+    freq.reserve(2000);
+    timedep.reserve(2000);
+    freqdep.reserve(2000);
 }
 
 void green::compute(const double step, const int counts)
@@ -48,10 +48,10 @@ void green::compute(const double step, const int counts)
     fft.fwd(freqdep,timedep);
 
     // write timescale
-    time.resize(counts,0.0);
+    time.resize(counts);
     int ct=-1;
     for (auto& i : time)
-          (++ct , i ? i : i = ct*step); 
+          i = ++ct * step; 
     // write freqscale
     freq.clear();
     const double f = 1.0/step;

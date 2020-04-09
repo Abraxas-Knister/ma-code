@@ -24,4 +24,4 @@ main.prog: main.o \
 	$(CC) $(OP) -c $<
 
 %.prog:
-	$(CC) $^ -o $@
+	$(CC) $^ -fopenmp -o $@

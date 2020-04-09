@@ -2,7 +2,7 @@
 #define CONFIG_HPP
 
 #include <complex>
-#include <cmath> 
+#include <cmath>
 #include <map>
 
 #define EIGEN_NO_DEBUG
