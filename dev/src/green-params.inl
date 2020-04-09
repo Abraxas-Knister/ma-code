@@ -20,8 +20,8 @@ void green::ckparams(double &U , double &V) const
     const double
         dself {self_2 - self_1};
     double newV { 1.0/(1.0 - dself/dw) };
-/* DEB */    static int huhct = 0;
-/* DEB */    if (newV<0) { std::cerr << "=== neg mass: " << ++huhct << " ===\n"; }
+/* DEB */  //  static int huhct = 0;
+/* DEB */  //  if (newV<0) { std::cerr << "=== neg mass: " << ++huhct << " ===\n"; }
     V = sqrt(std::fabs(newV));
     U = setup.U;
 }
@@ -31,4 +31,20 @@ double selfenergy(int i, const green *G)
     // G0**-1 = w + mu - V**2 / w
     // S = G0**-1 - G**-1
     return G->freq[i] + G->setup.U/2 - (G->setup.V*G->setup.V)/G->freq[i] - 1.0/G->freqdep[i].real();
+}
+
+double green::timestep() const
+{
+    /* find freqency with maximal weight
+     * compute a timestep such that
+     * this frequency gets some support points
+     * return that timestep
+     */
+    auto absComp { [] (const complex& a, const complex& b) -> bool
+        { return std::norm(a) < std::norm(b); }
+    };
+    auto max { std::max_element(freqdep.begin(), freqdep.begin() + freqdep.size()/2 , absComp) };
+    const auto maxIndex { std::distance(freqdep.begin(),max) };
+    const double f { freq[maxIndex] };
+    return 1.0/(200*f);
 }

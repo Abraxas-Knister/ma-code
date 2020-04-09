@@ -16,8 +16,9 @@ struct green
 
     green(Setup &);
 
-    void compute(const double step=1e-6, const int counts=5000);
+    void compute(const double step=1e-6, const int counts=10000);
     void ckparams(double&,double&) const;
+    double timestep() const;
 
     friend std::ostream& operator<< (std::ostream &,const green &);
 };

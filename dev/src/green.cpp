@@ -6,6 +6,10 @@
 #include <iostream>
 #include <unsupported/Eigen/FFT>
 
+#include "green-params.inl"
+/* implements ckparams and timestep
+ */
+
 green::green(Setup &s)
     : setup (s)
 {
@@ -74,4 +78,3 @@ std::ostream& operator<< (std::ostream &out, const green &gf)
     }
     return out;
 }
-#include "green-params.inl"
