@@ -1,9 +1,10 @@
 #include "green.hpp"
 #include "setup.hpp"
 
-#include <cmath> 
-#include <iostream> 
-#include <unsupported/Eigen/FFT> 
+#include <algorithm>
+#include <cmath>
+#include <iostream>
+#include <unsupported/Eigen/FFT>
 
 green::green(Setup &s)
     : setup (s)
@@ -53,9 +54,13 @@ void green::compute(const double step, const int counts)
     for (auto& i : time)
           i = ++ct * step; 
     // write freqscale
-    freq.clear();
-    const double f = 1.0/step;
-    for (int i=0; i<counts; i++) { freq.push_back(f*(i-counts/2)); }
+    freq.resize(counts);
+    const double f = 1.0/(counts*step);
+    for (int i=0; i<counts; i++)
+    {
+        int j = ( i < counts/2 ? i : i-counts);
+        freq[i] = f * j;
+    }
 }
 
 std::ostream& operator<< (std::ostream &out, const green &gf)
