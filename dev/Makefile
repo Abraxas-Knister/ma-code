@@ -9,6 +9,12 @@ clean:
 	cd src;  make clean
 	cd test; make clean
 	cd main; make clean
+	cd plot; find . \
+		-type f \
+		-not -name "*.plt" \
+		-not -name ".gitignore" \
+		-not -name "doplots" \
+		-delete
 
 dep:
 	cd src;  make dep
@@ -16,4 +22,4 @@ dep:
 	cd main; make dep
 
 plot:
-	cd plot; ./mat.plt
+	cd plot; bash doplots
