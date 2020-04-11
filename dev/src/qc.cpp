@@ -1,26 +1,36 @@
 #include "qc.hpp"
 
 #include <cmath>
+#include <functional>
 #include <iostream>
 #include <stdexcept>
 #include <string>
 
 using namespace QC;
 
-#include "qc-helpers.inl"
-/* funtions for the function pointer in the inner loop functions for the gates
- * binary number printing for the print rig operator<<
- */
 #include "qc-impl.inl"
 /* class implementation:
  *
  * contructor, destructor
  * set function
  * prob function
- * inner loops for the gates
- * printing
  */
 #include "qc-gates.inl"
-/* X Y Z H M P A C R-- single
- * CZ CR -- two 
+/* gates are implemented as follows:
+ * Rig::gate() takes 
+ *  an index to apply the gate on
+ *  a QC::unitary (aka void(complex&,complex&)
+ *    transforming (up,dw) into the new (up,dw)
+ *  an index to be controlled by
+ *  a boolean wether the control should be 0 or 1
+ *
+ *  if the control is -1 no controlling is done
+ *  if a double d is given as the third argument
+ *   the Qbit is transformed as
+ *    Id*cos(pi*d) + iP*sin(pi*d)
+ *   where P is the provided unitary
+ * QC::unitaries X,Y,Z,H are provided.
+ */
+#include "qc-misc.inl"
+/* creators and annihilators, printing
  */

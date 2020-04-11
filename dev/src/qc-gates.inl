@@ -1,80 +1,103 @@
-// === One Bit ===
-// Paulis
-Rig& Rig::X(int index)
+// pauli and hadamard gates
+void QC::X (complex& up, complex& dw)
 {
-    loop(index , _X);
-    return *this;
+    auto tmp = up;
+    up = dw;
+    dw = tmp;
+}
+void QC::Y (complex& up, complex& dw)
+{
+    auto tmp = up;
+    up = IU*dw;
+    dw = -IU*tmp;
+}
+void QC::Z (complex& up, complex&)
+{
+    up *= -1.0;
+}
+void QC::H (complex& up, complex& dw)
+{
+    static constexpr double sq2inv = 0.7071067811865475244008443621048490392848 ;
+    auto u = dw - up;
+    auto d = dw + up;
+    up = u*sq2inv;
+    dw = d*sq2inv;
+}
+// "rotate" ie introduce phase between up and dw
+std::function<unitary> QC::R(double pimul)
+{
+    complex phase { std::exp(IU*PI*pimul) };
+    return
+        [phase] (complex& up,complex&) -> void
+        {
+            up *= phase;
+        }
+    ;
 }
 
+// internal of the gates
+Rig& Rig::gate(int index, std::function<unitary> f, int by, bool ifset)
+{
+    oob(index);
+    const int mask = 1 << index;
 
-Rig& Rig::Y(int index)
-{
-    loop(index , _Y);
+    using check_t = std::function<bool(int)>;
+    check_t check;
+
+    if (by == -1)
+    {
+        check = {
+            [&] (int i) -> bool
+            {
+                return i & mask;
+            }
+        };
+    } else {
+        oob(by);
+        const int cmask = 1 << by;
+
+        check = {
+            [&] (int i) -> bool
+            {
+                if (ifset)
+                        return (i & mask) && (i & cmask);
+                else
+                        return (i & mask) && !(i & cmask);
+            }
+        };
+    }
+
+    for (int i=0; i < m_length; ++i)
+    {
+        if (check(i))
+        {
+            complex up = m_memory[i];
+            complex dw = m_memory[i & ~mask];
+            if (std::norm(up) + std::norm(dw) <= absEps)
+                  continue;
+            f(up,dw);
+            m_memory[i] = up;
+            m_memory[i & ~mask] = dw;
+        }
+    }
     return *this;
 }
-Rig& Rig::Z(int index)
+Rig& Rig::gate(int index, std::function<unitary> f, double pimul, int by, bool ifset)
 {
-    loop(index , _Z);
-    return *this;
-}
-// Hadamard and plus, minus
-Rig& Rig::H(int index)
-{
-    loop(index, _H);
-    return *this;
-}
-Rig& Rig::M(int index)
-{
-    loop(index, _M);
-    return *this;
-}
-Rig& Rig::P(int index)
-{
-    loop(index, _P);
-    return *this;
-}
-// creation and annihilation of spin up/dw
-Rig& Rig::A(int index)
-{
-    P(index);
-    for (int i = 0; i<index; ++i)
-          Z(i);
-    return *this;
-}
-Rig& Rig::C(int index)
-{
-    M(index);
-    for (int i = 0; i<index; ++i)
-          Z(i);
-    return *this;
-}
-// rotation
-Rig& Rig::R(int index, double pimul, Rig& (Rig::*pauli)(int))
-{
-    const auto cos = std::cos(PI*pimul);
+    /* exp ( i PI*pimul f) =
+     *  cos(PI*pimul)ID + IU*sin(PI*pimul) f
+     */
+    const auto cos =    std::cos(PI*pimul);
     const auto sin = IU*std::sin(PI*pimul);
 
-    complex *copy = new complex[m_length];
-    for (int i=0; i<m_length; ++i)
-          copy[i] = m_memory[i];
-
-    (this->*pauli)(index);
-    for (int i=0; i<m_length; ++i) 
-          m_memory[i] = copy[i] * cos + m_memory[i] * sin;
-    delete[] copy;
-    return *this;
-}
-// === Two Bit ===
-// Controlled Z
-Rig& Rig::CZ(int index,int by, bool ifset)
-{
-    ctrl(index,_Z,by,ifset);
-    return *this;
-}
-// controlled rotation
-Rig& Rig::CR(int index, double pimul, int by, bool ifset)
-{
-    _rotation = pimul;
-    ctrl(index,_R,by,ifset);
-    return *this;
+    std::function<unitary> rotation = {
+        [&] (complex& up, complex& dw) -> void
+        {
+            complex b_up{up},b_dw{dw};
+            f(up,dw);
+            up = cos*b_up + sin*up;
+            dw = cos*b_dw + sin*dw;
+        }
+    };
+    return gate(index,rotation,by,ifset);
 }
