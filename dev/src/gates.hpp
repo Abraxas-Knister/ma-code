@@ -7,6 +7,7 @@
 namespace QC
 {
     std::function<unitary> R(double);
+    std::function<unitary> R(double,double,double);
 }
 
 // creator/annihilator

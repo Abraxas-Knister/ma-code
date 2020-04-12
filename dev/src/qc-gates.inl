@@ -47,19 +47,21 @@ Rig& Rig::gate(int index, std::function<unitary> f, int by, bool ifset)
 }
 Rig& Rig::gate(int index, std::function<unitary> f, double pimul, int by, bool ifset)
 {
-    /* exp ( i PI*pimul f) =
-     *  cos(PI*pimul)ID + IU*sin(PI*pimul) f
+    /* exp ( - i PI*pimul/2 P) =
+     *  cos(PI*pimul/2)ID - IU*sin(PI*pimul/2) P
+     *
+     * is the rotation around axis P by PI*pimul
      */
-    const auto cos =    std::cos(PI*pimul);
-    const auto sin = IU*std::sin(PI*pimul);
+    const auto cos  =    std::cos(PI*pimul*0.5);
+    const auto isin = IU*std::sin(PI*pimul*0.5);
 
     std::function<unitary> rotation = {
         [&] (complex& up, complex& dw) -> void
         {
             complex b_up{up},b_dw{dw};
             f(up,dw);
-            up = cos*b_up + sin*up;
-            dw = cos*b_dw + sin*dw;
+            up = cos*b_up - isin*up;
+            dw = cos*b_dw - isin*dw;
         }
     };
     return gate(index,rotation,by,ifset);
