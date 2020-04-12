@@ -1,4 +1,5 @@
 #include "../src/qc.hpp"
+#include "../src/gates.hpp"
 
 #include <iostream>
 

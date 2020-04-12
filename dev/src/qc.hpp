@@ -31,11 +31,6 @@ namespace QC
         Rig& gate(int, std::function<unitary>, double, int=-1, bool=true);
     };
     unitary X, Y, Z, H;
-    std::function<unitary> R(double);
 }
-
-// creator/annihilator
-QC::Rig& operator+ (QC::Rig&,int);
-QC::Rig& operator- (QC::Rig&,int);
 
 #endif // guard

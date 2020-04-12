@@ -1,29 +1,3 @@
-// creation and annihilation of spin up/dw
-void _M (complex& up, complex& dw)
-{
-    up = dw;
-    dw = 0.0;
-}
-void _P (complex& up, complex& dw)
-{
-    dw = up;
-    up = 0.0;
-}
-Rig& operator- (Rig& r, int index)
-{
-    r.gate(index, _P);
-    for (int i = 0; i<index; ++i)
-          r.gate(i,Z);
-    return r;
-}
-Rig& operator+ (Rig& r, int index)
-{
-    r.gate(index, _M);
-    for (int i = 0; i<index; ++i)
-          r.gate(i,Z);
-    return r;
-}
-
 // printing
 std::string bin(int m, int width)
 {
@@ -39,4 +13,20 @@ std::ostream& operator<< (std::ostream& out,const Rig& r)
     for (int i=0; i < r.m_length - 1; ++i)
           out << bin(i , r.m_bits) << " : " << r.m_memory[i] << '\n';
     return out;
+}
+/* measure the Z projection of spin "index" without projecting
+ * load the double pup and pdw with the probabilities for up and dw
+ */
+Rig& Rig::prob(int index, double& up, double& dw)
+{
+    oob(index);
+    up=0.0;
+    int mask = 1 << index;
+    for (int i=0; i<m_length; ++i)
+    {
+        if (i & mask)
+              up+=std::norm(m_memory[i]);
+    }
+    dw=1.0-up;
+    return *this;
 }

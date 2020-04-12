@@ -19,7 +19,8 @@ qbit.test: qbit.o \
 	../src/qbit.o
 
 qcrig.test: qcrig.o \
-	../src/qc.o
+	../src/qc.o \
+	../src/gates.o
 
 %.o: %.cpp
 	$(CC) $(OP) -c $<

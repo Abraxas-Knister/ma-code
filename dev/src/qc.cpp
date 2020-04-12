@@ -13,7 +13,6 @@ using namespace QC;
  *
  * contructor, destructor
  * set function
- * prob function
  */
 #include "qc-gates.inl"
 /* gates are implemented as follows:
@@ -29,8 +28,12 @@ using namespace QC;
  *   the Qbit is transformed as
  *    Id*cos(pi*d) + iP*sin(pi*d)
  *   where P is the provided unitary
- * QC::unitaries X,Y,Z,H are provided.
+ */
+#include "qc-pauli.inl"
+/*
+ * QC::unitaries X,Y,Z,H
  */
 #include "qc-misc.inl"
 /* creators and annihilators, printing
+ * prob function
  */
