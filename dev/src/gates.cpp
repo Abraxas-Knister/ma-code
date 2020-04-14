@@ -1,5 +1,7 @@
 #include "gates.hpp"
 
+#include "random.hpp"
+
 #include <cmath>
 
 using namespace QC;

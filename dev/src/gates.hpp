@@ -8,6 +8,10 @@ namespace QC
 {
     std::function<unitary> R(double);
     std::function<unitary> R(double,double,double);
+    std::function<unitary> disturb(double);
+    void XX(Rig&,int,int,double);
+    void YY(Rig&,int,int,double);
+    void ZZ(Rig&,int,int,double);
 }
 
 // creator/annihilator

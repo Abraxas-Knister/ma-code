@@ -42,3 +42,11 @@ std::function<unitary> QC::R(double by, double theta, double phi)
         }
     ;
 }
+std::function<unitary> QC::disturb(double degree)
+{
+    double
+        by    { Random::grand(0,degree) },
+        theta { Random::rand()*PI },
+        phi   { Random::rand()*2.0*PI };
+    return R(by,theta,phi);
+}
