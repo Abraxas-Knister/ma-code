@@ -20,7 +20,8 @@ qbit.test: qbit.o \
 
 qcrig.test: qcrig.o \
 	../src/qc.o \
-	../src/gates.o
+	../src/gates.o \
+	../src/random.o
 
 random.test: random.o \
 	../src/random.o
