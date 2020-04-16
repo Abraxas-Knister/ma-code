@@ -12,7 +12,7 @@ Rig& Rig::set(int mask)
     return *this;
 }
 // bounds check
-void Rig::oob(int index)
+void Rig::oob(int index) const
 {
     if (index < 0 || index >= m_bits)
           throw std::runtime_error("Index out of bounds");

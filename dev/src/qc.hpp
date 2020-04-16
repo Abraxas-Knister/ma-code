@@ -16,13 +16,15 @@ namespace QC
         const int m_bits;
         const int m_length;
         complex * m_memory;
-        void oob(int index);
+        void oob(int index) const;
     public:
         Rig(int);
         virtual ~Rig();
 
         Rig& set(int=0);
-        Rig& prob(int,double&,double&);
+        const Rig& probX(int,double&,double&) const;
+        const Rig& probY(int,double&,double&) const;
+        const Rig& probZ(int,double&,double&) const;
 
         friend
         std::ostream& (::operator<<) (std::ostream&,const Rig&);

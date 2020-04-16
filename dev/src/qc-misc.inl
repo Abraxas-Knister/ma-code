@@ -14,19 +14,67 @@ std::ostream& operator<< (std::ostream& out,const Rig& r)
           out << bin(i , r.m_bits) << " : " << r.m_memory[i] << '\n';
     return out;
 }
-/* measure the Z projection of spin "index" without projecting
- * load the double pup and pdw with the probabilities for up and dw
+/* measure the X,Y,Z projection of spin "index" without projecting
+ * load the doubles m and p with the probabilities for eigenvalue -1 / + 1
  */
-Rig& Rig::prob(int index, double& up, double& dw)
+const Rig& Rig::probX(int index, double& m, double& p) const
 {
+    /* sqrt(1/2) (X+Z) is the transform between Z and X and back
+     *
+     * -> +1 part is (up+dw)/sqrt(2)
+     *    -1 is (dw-up)/sqrt2
+     */
     oob(index);
-    up=0.0;
+    m = 0.0;
     int mask = 1 << index;
     for (int i=0; i<m_length; ++i)
     {
         if (i & mask)
-              up+=std::norm(m_memory[i]);
+        {
+            complex
+                up = m_memory[i],
+                dw = m_memory[i & ~mask];
+            m += std::norm(dw-up);
+        }
     }
-    dw=1.0-up;
+    m /= 2.0;
+    p = 1.0 - m;
+    return *this;
+}
+const Rig& Rig::probY(int index, double& m, double& p) const
+{
+    /* sqrt(1/2) (Y+Z) is the transform between Z and Y and back
+     *
+     * -> +1 part is (dw - i up)/sqrt(2)
+     *    -1 is (i dw - up)/sqrt2
+     */
+    oob(index);
+    m = 0.0;
+    int mask = 1 << index;
+    for (int i=0; i<m_length; ++i)
+    {
+        if (i & mask)
+        {
+            complex
+                up = m_memory[i],
+                dw = m_memory[i & ~mask];
+            m += std::norm(dw-IU*up);
+        }
+    }
+    m /= 2.0;
+    p = 1.0 - m;
+    return *this;
+}
+const Rig& Rig::probZ(int index, double& m, double& p) const
+{
+    oob(index);
+    m = 0.0;
+    int mask = 1 << index;
+    for (int i=0; i<m_length; ++i)
+    {
+        if (i & mask)
+              m += std::norm(m_memory[i]);
+    }
+    p = 1.0 - m;
     return *this;
 }
