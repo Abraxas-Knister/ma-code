@@ -34,7 +34,7 @@ int main ()
     std::cerr << (ct==maxct ? "Warn: many cycles\n" : "");
 
     std::ofstream fG("data/mat-gf");
-    fG << std::setprecision(15) << G;
+    fG << std::setprecision(15) << *G.gf;
 
     std::ofstream vvec("data/mat-converg");
     vvec << std::setprecision(15);

@@ -16,6 +16,7 @@ dep:
 -include .depend
 
 main.prog: main.o \
+	../src/fourier.o \
 	../src/green.o \
 	../src/setup.o \
 	../src/util.o

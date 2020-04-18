@@ -13,7 +13,7 @@ void green::ckparams(double &U , double &V) const
      * Need to calculate Self energy at freq[2] and freq[1] since freq[0] is 0
      * to avoid devide by 0.
      */
-    const double dw { freq[1] };
+    const double dw { gf->valsFreq()[1] };
     const double
         self_1 {selfenergy(1,this)},
         self_2 {selfenergy(2,this)};
@@ -30,7 +30,10 @@ double selfenergy(int i, const green *G)
 {
     // G0**-1 = w + mu - V**2 / w
     // S = G0**-1 - G**-1
-    return G->freq[i] + G->setup.U/2 - (G->setup.V*G->setup.V)/G->freq[i] - 1.0/G->freqdep[i].real();
+    double
+        w = G->gf->valsFreq()[i] ,
+        g = G->gf->specFreq()[i].real();
+    return w + G->setup.U/2 - (G->setup.V*G->setup.V)/w - 1.0/g;
 }
 
 double green::timestep() const
@@ -43,8 +46,9 @@ double green::timestep() const
     auto absComp { [] (const complex& a, const complex& b) -> bool
         { return std::norm(a) < std::norm(b); }
     };
-    auto max { std::max_element(freqdep.begin(), freqdep.begin() + freqdep.size()/2 , absComp) };
-    const auto maxIndex { std::distance(freqdep.begin(),max) };
-    const double f { freq[maxIndex] };
-    return 1.0/(200*f);
+    const auto& f{gf->specFreq()};
+    auto max { std::max_element(f.begin(), f.begin() + f.size()/2 , absComp) };
+    const auto maxIndex { std::distance(f.begin(),max) };
+    const double freq { gf->valsFreq()[maxIndex] };
+    return 1.0/(200*freq);
 }

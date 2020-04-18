@@ -16,6 +16,7 @@ dep:
 -include .depend
 
 fourier.test: fourier.o \
+	../src/util.o \
 	../src/fourier.o
 
 qbit.test: qbit.o \
