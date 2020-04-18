@@ -1,6 +1,5 @@
 #include "fourier.hpp"
-
-Eigen::FFT<double> Fourier::fft = Eigen::FFT<double>();
+#include <unsupported/Eigen/FFT>
 
 Fourier::Fourier (std::size_t s)
 {
@@ -10,18 +9,19 @@ Fourier::Fourier (std::size_t s)
     m_specFreq.reserve(s);
 }
 
-void Fourier::update(std::vector<complex>& newSpec, double step, bool time)
+Eigen::FFT<double> _fft;
+void Fourier::update(Fourier::spec_t& newSpec, double step, bool time)
 {
     // create freq/time spectrum
     if (time)
     {
         m_specFreq.clear();
         m_specTime.swap(newSpec);
-        Fourier::fft.fwd(m_specFreq,m_specTime);
+        _fft.fwd(m_specFreq,m_specTime);
     } else {
         m_specFreq.clear();
         m_specFreq.swap(newSpec);
-        Fourier::fft.inv(m_specFreq,m_specTime);
+        _fft.inv(m_specFreq,m_specTime);
     }
     // write timescale
     const std::size_t counts { m_specFreq.size() };
