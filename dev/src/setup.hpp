@@ -6,7 +6,7 @@
 
 #include <Eigen/Core>
 
-struct Setup
+class Setup
 {
     /* Hamiltonian is the one for one site and one bath site ie
      * site is occupied with  - (Nsu + Nsd) * mu
@@ -21,20 +21,23 @@ struct Setup
      * Parameters are only V since halve filling sets the parameters mu = U/2
      * and e=0. (I don't see where this is coming from).
      */
-    using operator_t = Eigen::Matrix<complex,16,16>;
-    using state_t    = Eigen::Vector<complex,16>;
-
-    double U,V;
-    operator_t H;
-    state_t groundstate;
+public:
     Setup(const double iniU, const double iniV)
     {
         set(iniU,iniV);
     }
+    double U,V;
     void set(const double newU, const double newV);
     Fourier::spec_t green(double,int) const;
 
-    operator_t evolve(const double t)   const;
+private:
+    using operator_t = Eigen::Matrix<complex,16,16>;
+    using state_t    = Eigen::Vector<complex,16>;
+
+    operator_t H;
+    state_t groundstate;
+
+    operator_t evolve(const double t)      const;
     state_t  C(const state_t&,const int=0) const;
     state_t Cd(const state_t&,const int=0) const;
 

@@ -1,4 +1,4 @@
-bool checktwo(const Setup::operator_t &, const int);
+bool checktwo(const Eigen::MatrixXcd &, const int);
 void Setup::setGdstate()
 {
     Eigen::SelfAdjointEigenSolver<Setup::operator_t> solver(H);
@@ -13,7 +13,7 @@ void Setup::setGdstate()
     throw "Couldn't find groundstate with two particles.";
 }
 
-bool checktwo(const Setup::operator_t &m, const int col)
+bool checktwo(const Eigen::MatrixXcd &m, const int col)
 {
     for (int i=0; i<16; i++)
     {
