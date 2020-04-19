@@ -2,6 +2,8 @@
 #define SETUP_HPP
 #include "config.hpp"
 
+#include "fourier.hpp"
+
 #include <Eigen/Core>
 
 struct Setup
@@ -30,6 +32,7 @@ struct Setup
         set(iniU,iniV);
     }
     void set(const double newU, const double newV);
+    Fourier::spec_t green(double,int) const;
 
     operator_t evolve(const double t)   const;
     state_t  C(const state_t&,const int=0) const;

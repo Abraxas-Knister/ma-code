@@ -1,12 +1,13 @@
 #include "setup.hpp"
 
 #include <cmath>
-#include <iostream> 
+#include <iostream>
 #include <Eigen/Eigenvalues>
 #include <unsupported/Eigen/MatrixFunctions>
 
 #include "setup-operators.inl"
 #include "setup-gdstate.inl"
+#include "setup-green.inl"
 
 int sg(int msk, int orb);
 void Setup::set (const double newU, const double newV)
