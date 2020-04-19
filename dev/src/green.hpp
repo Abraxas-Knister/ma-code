@@ -4,18 +4,20 @@
 
 #include "fourier.hpp"
 #include "setup.hpp"
-#include <vector>
 
 struct green
 {
-    const Setup &setup;
+    const Setup* setup;
     Fourier* gf;
 
-    green(Setup &);
+    green()
+        : setup(nullptr) ,
+          gf(nullptr)
+    { }
     virtual ~green();
 
     void compute(const double step=1e-6, const int counts=10000);
-    void ckparams(double&,double&) const;
+    void ckparams(double&) const;
     double timestep() const;
 };
 

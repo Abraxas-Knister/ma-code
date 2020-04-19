@@ -13,7 +13,8 @@ int main ()
     // GREENS FUNCTION -> quantum device??
     double U=1.0,V=0.01;
     Setup s(U,V);
-    green G(s);
+    green G{};
+    G.setup = &s;
 
     double step = 5e-3;
     G.compute(step);
@@ -24,7 +25,7 @@ int main ()
     {
         oldV = V;
 
-        G.ckparams(U,V);     // GET SELF ENERGY -> PARAMETERS (SELF CONSISTENCY)
+        G.ckparams(V);     // GET SELF ENERGY -> PARAMETERS (SELF CONSISTENCY)
         s.set(U,V);          // UPDATE HAMILTONIAN AND REDO
         step = G.timestep(); // UPDATE TIMESTEP
         G.compute(step);

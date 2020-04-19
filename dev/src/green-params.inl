@@ -1,5 +1,5 @@
-double selfenergy(int,const green *);
-void green::ckparams(double &U , double &V) const
+double selfenergy(int,const green&);
+void green::ckparams(double &V) const
 {
     // Want d/dw Re(S) | w=0
     /* That's hopefully the same as
@@ -15,25 +15,24 @@ void green::ckparams(double &U , double &V) const
      */
     const double dw { gf->valsFreq()[1] };
     const double
-        self_1 {selfenergy(1,this)},
-        self_2 {selfenergy(2,this)};
+        self_1 {selfenergy(1,*this)},
+        self_2 {selfenergy(2,*this)};
     const double
         dself {self_2 - self_1};
     double newV { 1.0/(1.0 - dself/dw) };
 /* DEB */  //  static int huhct = 0;
 /* DEB */  //  if (newV<0) { std::cerr << "=== neg mass: " << ++huhct << " ===\n"; }
     V = sqrt(std::fabs(newV));
-    U = setup.U;
 }
 
-double selfenergy(int i, const green *G)
+double selfenergy(int i, const green &G)
 {
     // G0**-1 = w + mu - V**2 / w
     // S = G0**-1 - G**-1
     double
-        w = G->gf->valsFreq()[i] ,
-        g = G->gf->specFreq()[i].real();
-    return w + G->setup.U/2 - (G->setup.V*G->setup.V)/w - 1.0/g;
+        w = G.gf->valsFreq()[i] ,
+        g = G.gf->specFreq()[i].real();
+    return w + G.setup->U/2 - (G.setup->V*G.setup->V)/w - 1.0/g;
 }
 
 double green::timestep() const
@@ -43,7 +42,7 @@ double green::timestep() const
      * this frequency gets some support points
      * return that timestep
      */
-    auto absComp { [] (const complex& a, const complex& b) -> bool
+    const auto absComp { [] (const complex& a, const complex& b) -> bool
         { return std::norm(a) < std::norm(b); }
     };
     const auto& f{gf->specFreq()};
