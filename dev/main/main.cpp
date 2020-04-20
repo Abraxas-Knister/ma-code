@@ -1,6 +1,6 @@
 #include "../src/config.hpp"
 
-#include "../src/green.hpp"
+#include "../src/twosite.hpp"
 #include "../src/dense-ed.hpp"
 
 #include <fstream>
@@ -12,12 +12,12 @@ int main ()
 {
     // GREENS FUNCTION -> quantum device??
     double U=1.0,V=0.01;
-    green G{};
-    DenseED* d = new DenseED(U,V);
-    G.setup = d;
+    Twosite calc{};
+    DenseED* diagonalizer = new DenseED(U,V);
+    calc.setup = diagonalizer;
 
     double step = 5e-3;
-    G.compute(step);
+    calc.compute(step);
 
     std::vector<double> vv; double oldV=V*10;
     int maxct = 500, ct = 0;
@@ -25,20 +25,20 @@ int main ()
     {
         oldV = V;
 
-        G.ckparams(V);     // GET SELF ENERGY -> PARAMETERS (SELF CONSISTENCY)
-        d->set(U,V);          // UPDATE HAMILTONIAN AND REDO
-        step = G.timestep(); // UPDATE TIMESTEP
-        G.compute(step);
+        calc.ckparams(V);     // GET SELF ENERGY -> PARAMETERS (SELF CONSISTENCY)
+        diagonalizer->set(U,V);          // UPDATE HAMILTONIAN AND REDO
+        step = calc.timestep(); // UPDATE TIMESTEP
+        calc.compute(step);
 
         vv.push_back(V);
     }
     std::cerr << (ct==maxct ? "Warn: many cycles\n" : "");
 
-    delete d;
-    G.setup = 0;
+    delete diagonalizer;
+    calc.setup = 0;
 
     std::ofstream fG("data/mat-gf");
-    fG << std::setprecision(15) << *G.gf;
+    fG << std::setprecision(15) << *calc.greensfunction;
 
     std::ofstream vvec("data/mat-converg");
     vvec << std::setprecision(15);

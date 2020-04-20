@@ -1,5 +1,5 @@
-double selfenergy(int,const green&);
-void green::ckparams(double &V) const
+double selfenergy(int,const Twosite&);
+void Twosite::ckparams(double &V) const
 {
     // Want d/dw Re(S) | w=0
     /* That's hopefully the same as
@@ -13,7 +13,7 @@ void green::ckparams(double &V) const
      * Need to calculate Self energy at freq[2] and freq[1] since freq[0] is 0
      * to avoid devide by 0.
      */
-    const double dw { gf->valsFreq()[1] };
+    const double dw { greensfunction->valsFreq()[1] };
     const double
         self_1 {selfenergy(1,*this)},
         self_2 {selfenergy(2,*this)};
@@ -25,17 +25,17 @@ void green::ckparams(double &V) const
     V = sqrt(std::fabs(newV));
 }
 
-double selfenergy(int i, const green &G)
+double selfenergy(int i, const Twosite &G)
 {
     // G0**-1 = w + mu - V**2 / w
     // S = G0**-1 - G**-1
-    double
-        w = G.gf->valsFreq()[i] ,
-        g = G.gf->specFreq()[i].real();
+    const double
+        w = G.greensfunction->valsFreq()[i] ,
+        g = G.greensfunction->specFreq()[i].real();
     return w + G.setup->getU()/2 - (G.setup->getV()*G.setup->getV())/w - 1.0/g;
 }
 
-double green::timestep() const
+double Twosite::timestep() const
 {
     /* find freqency with maximal weight
      * compute a timestep such that
@@ -45,9 +45,9 @@ double green::timestep() const
     const auto absComp { [] (const complex& a, const complex& b) -> bool
         { return std::norm(a) < std::norm(b); }
     };
-    const auto& f{gf->specFreq()};
-    auto max { std::max_element(f.begin(), f.begin() + f.size()/2 , absComp) };
+    const auto& f{greensfunction->specFreq()};
+    const auto max { std::max_element(f.begin(), f.begin() + f.size()/2 , absComp) };
     const auto maxIndex { std::distance(f.begin(),max) };
-    const double freq { gf->valsFreq()[maxIndex] };
+    const double freq { greensfunction->valsFreq()[maxIndex] };
     return 1.0/(200*freq);
 }
