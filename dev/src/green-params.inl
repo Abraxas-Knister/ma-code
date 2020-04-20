@@ -32,7 +32,7 @@ double selfenergy(int i, const green &G)
     double
         w = G.gf->valsFreq()[i] ,
         g = G.gf->specFreq()[i].real();
-    return w + G.setup->U/2 - (G.setup->V*G.setup->V)/w - 1.0/g;
+    return w + G.setup->getU()/2 - (G.setup->getV()*G.setup->getV())/w - 1.0/g;
 }
 
 double green::timestep() const

@@ -18,7 +18,7 @@ dep:
 main.prog: main.o \
 	../src/fourier.o \
 	../src/green.o \
-	../src/setup.o \
+	../src/dense-ed.o \
 	../src/util.o
 
 %.o: %.cpp

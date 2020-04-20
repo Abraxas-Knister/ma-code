@@ -1,7 +1,7 @@
 bool checktwo(const Eigen::MatrixXcd &, const int);
-void Setup::setGdstate()
+void DenseED::setGdstate()
 {
-    Eigen::SelfAdjointEigenSolver<Setup::operator_t> solver(H);
+    Eigen::SelfAdjointEigenSolver<DenseED::operator_t> solver(H);
     for (int i=0; i<16; i++)
     {
         if (checktwo(solver.eigenvectors(),i))

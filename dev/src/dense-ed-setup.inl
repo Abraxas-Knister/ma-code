@@ -1,5 +1,5 @@
 // the green function
-Fourier::spec_t Setup::green(double step, int counts) const
+Fourier::spec_t DenseED::green(double step, int counts) const
 {
     // create timedep scale
     /* the greensfunction is given by
@@ -38,11 +38,11 @@ inline int sg(int msk, int orb)
     bool has = msk & (1<<orb);
     return 1-2*has;
 }
-void Setup::set (const double newU, const double newV)
+void DenseED::set (const double newU, const double newV)
 {
     U=newU;
     V=newV;
-    operator_t tmp = operator_t::Zero();  
+    operator_t tmp = operator_t::Zero();
     int j {};
     for (int i = 0; i<16; i++ )
     {

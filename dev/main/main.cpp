@@ -1,7 +1,7 @@
 #include "../src/config.hpp"
 
 #include "../src/green.hpp"
-#include "../src/setup.hpp"
+#include "../src/dense-ed.hpp"
 
 #include <fstream>
 #include <iomanip>
@@ -12,9 +12,9 @@ int main ()
 {
     // GREENS FUNCTION -> quantum device??
     double U=1.0,V=0.01;
-    Setup s(U,V);
     green G{};
-    G.setup = &s;
+    DenseED* d = new DenseED(U,V);
+    G.setup = d;
 
     double step = 5e-3;
     G.compute(step);
@@ -26,13 +26,16 @@ int main ()
         oldV = V;
 
         G.ckparams(V);     // GET SELF ENERGY -> PARAMETERS (SELF CONSISTENCY)
-        s.set(U,V);          // UPDATE HAMILTONIAN AND REDO
+        d->set(U,V);          // UPDATE HAMILTONIAN AND REDO
         step = G.timestep(); // UPDATE TIMESTEP
         G.compute(step);
 
         vv.push_back(V);
     }
     std::cerr << (ct==maxct ? "Warn: many cycles\n" : "");
+
+    delete d;
+    G.setup = 0;
 
     std::ofstream fG("data/mat-gf");
     fG << std::setprecision(15) << *G.gf;
