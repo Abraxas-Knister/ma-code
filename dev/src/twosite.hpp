@@ -5,6 +5,8 @@
 #include "fourier.hpp"
 #include "setup.hpp"
 
+#include <vector>
+
 struct Twosite
 {
     const Setup* setup;
@@ -20,5 +22,7 @@ struct Twosite
     void ckparams(double&) const;
     double timestep() const;
 };
+
+void converge(std::vector<double>* const,Twosite&,Setup*,const double,double=5e-3,const int=500);
 
 #endif // guard

@@ -5,41 +5,26 @@
 
 #include <fstream>
 #include <iomanip>
-#include <iostream>
 #include <vector>
 
 int main ()
 {
-    // GREENS FUNCTION -> quantum device??
-    double U=1.0,V=0.01;
+    // calc is the calculator that operates in the mode diagonalizer
     Twosite calc{};
-    DenseED* diagonalizer = new DenseED(U,V);
-    calc.setup = diagonalizer;
+    Setup* diagonalizer = new DenseED(1.0 , 0.01);
 
-    double step = 5e-3;
-    calc.compute(step);
+    // invocation of the calculator
+    std::vector<double> vv;
+    converge(&vv,calc,diagonalizer,1e-7);
 
-    std::vector<double> vv; double oldV=V*10;
-    int maxct = 500, ct = 0;
-    while ( (++ct < maxct ) && !areNear(V,oldV,1e-7)) // CHECK CONVERGENCE
-    {
-        oldV = V;
-
-        calc.ckparams(V);     // GET SELF ENERGY -> PARAMETERS (SELF CONSISTENCY)
-        diagonalizer->set(U,V);          // UPDATE HAMILTONIAN AND REDO
-        step = calc.timestep(); // UPDATE TIMESTEP
-        calc.compute(step);
-
-        vv.push_back(V);
-    }
-    std::cerr << (ct==maxct ? "Warn: many cycles\n" : "");
-
+    // mode is now no longer needed
     delete diagonalizer;
-    calc.setup = 0;
 
+    // the result of the calculation is stored in the calc
     std::ofstream fG("data/mat-gf");
     fG << std::setprecision(15) << *calc.greensfunction;
 
+    // the calculation routine can store the history of the parameter
     std::ofstream vvec("data/mat-converg");
     vvec << std::setprecision(15);
     for (auto i:vv) vvec << i <<'\n';
