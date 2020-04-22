@@ -11,7 +11,7 @@ protected:
 public:
     double getU() const { return U; }
     double getV() const { return V; }
-    Setup() : U(0.0), V(0.0) {}
+    Setup(double u, double v) : U(u), V(v) {}
     Setup(const Setup&) = delete;
     virtual ~Setup() {}
     virtual void set(const double newU, const double newV) = 0;

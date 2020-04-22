@@ -23,6 +23,7 @@ class DenseED : public Setup
      */
 public:
     DenseED(const double iniU, const double iniV)
+        : Setup(iniU,iniV)
     {
         set(iniU,iniV);
     }
