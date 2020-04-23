@@ -9,7 +9,7 @@
 
 struct Twosite
 {
-    const Setup* setup;
+    Setup* setup;
     Fourier* greensfunction;
 
     Twosite()

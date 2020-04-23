@@ -28,7 +28,7 @@ public:
         set(iniU,iniV);
     }
     void set(const double newU, const double newV) override ;
-    Fourier::spec_t green(double,int) const        override ;
+    Fourier::spec_t green(double,int)              override ;
 private:
     using operator_t = Eigen::Matrix<complex,16,16>;
     using state_t    = Eigen::Vector<complex,16>;

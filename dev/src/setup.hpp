@@ -15,7 +15,7 @@ public:
     Setup(const Setup&) = delete;
     virtual ~Setup() {}
     virtual void set(const double newU, const double newV) = 0;
-    virtual Fourier::spec_t green(double,int) const = 0;
+    virtual Fourier::spec_t green(double,int) = 0;
 };
 
 #endif // guard

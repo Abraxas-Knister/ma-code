@@ -1,5 +1,5 @@
 // the green function
-Fourier::spec_t DenseED::green(double step, int counts) const
+Fourier::spec_t DenseED::green(double step, int counts)
 {
     // create timedep scale
     /* the greensfunction is given by
