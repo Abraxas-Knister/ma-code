@@ -11,23 +11,24 @@ Rig& Rig::gate(int index, std::function<unitary> f, int by, bool ifset)
     {
         check = {
             [&] (int i) -> bool
-            {
-                return i & mask;
-            }
+            { return i & mask; }
         };
     } else {
         oob(by);
         const int cmask = 1 << by;
 
-        check = {
-            [&] (int i) -> bool
-            {
-                if (ifset)
-                        return (i & mask) && (i & cmask);
-                else
-                        return (i & mask) && !(i & cmask);
-            }
-        };
+        if (ifset)
+        {
+            check = {
+                [&] (int i) -> bool
+                { return (i & mask) && (i & cmask); }
+            };
+        } else {
+            check = {
+                [&] (int i) -> bool
+                { return (i & mask) && !(i & cmask); }
+            };
+        }
     }
 
     for (int i=0; i < m_length; ++i)

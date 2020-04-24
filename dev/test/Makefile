@@ -34,4 +34,4 @@ random.test: random.o \
 	$(CC) $(OP) -c $<
 
 %.test:
-	$(CC) $^ -o $@
+	$(CC) -fopenmp -o $@ $^
