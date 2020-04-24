@@ -19,10 +19,14 @@ main.prog: main.o \
 	../src/fourier.o \
 	../src/twosite.o \
 	../src/dense-ed.o \
-	../src/util.o
+	../src/util.o \
+	../src/random.o \
+	../src/gates.o \
+	../src/qc.o \
+	../src/qmeth.o \
 
 %.o: %.cpp
 	$(CC) $(OP) -c $<
 
 %.prog:
-	$(CC) $^ -fopenmp -o $@
+	$(CC) -fopenmp -o $@ $^

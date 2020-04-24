@@ -40,6 +40,8 @@ Qmeth& Qmeth::trotterstep(double step)
 
 Qmeth& Qmeth::evolve(double step,int counts)
 {
+    if (counts<0) throw 1;
+    if (counts==0) return *this;
     do
           trotterstep(step);
     while (--counts);

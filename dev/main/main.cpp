@@ -1,14 +1,30 @@
 #include "../src/config.hpp"
 
-#include "../src/twosite.hpp"
 #include "../src/dense-ed.hpp"
+#include "../src/twosite.hpp"
+#include "../src/qmeth.hpp"
 
 #include <fstream>
 #include <iomanip>
 #include <vector>
 
+void write(const std::string &name, const Twosite& calc, std::vector<double>* Vs=nullptr)
+{
+    {
+        std::ofstream f("data/" + name + "-gf");
+        f << std::setprecision(15) << calc.greensfunction;
+    }
+    if (Vs)
+    {
+        std::ofstream f("data/" + name + "-converg");
+        f << std::setprecision(15);
+        for (auto i : *Vs) f << i <<'\n';
+    }
+}
+
 int main ()
 {
+
     // calc is the calculator that operates in the mode diagonalizer
     Twosite calc{};
     Setup* diagonalizer = new DenseED(1.0 , 0.01);
