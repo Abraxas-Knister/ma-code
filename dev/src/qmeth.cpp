@@ -1,6 +1,9 @@
 #include "qmeth.hpp"
 
+#include "dense-ed.hpp"
 #include "gates.hpp"
+
+#include <map>
 
 #include "qmeth-interfer.inl"
 /* everything needed to

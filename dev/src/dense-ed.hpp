@@ -41,6 +41,8 @@ private:
     state_t Cd(const state_t&,const int=0) const;
 
     void setGdstate();
+public:
+    const state_t& gdstate() const { return groundstate; }
 };
 
 #endif // guard

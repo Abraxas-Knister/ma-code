@@ -22,6 +22,13 @@ namespace QC
         virtual ~Rig();
 
         Rig& set(int=0);
+        complex* bad() { return m_memory; }
+        /* bad() is black magic since it allows the state to be overwritten
+         * arbitrarily (by something outside) as opposed to being manipulated
+         * well defined (and norm conserving) through gates.
+         *
+         * -> should be removed ASAP
+         */
         const Rig& probX(int,double&,double&) const;
         const Rig& probY(int,double&,double&) const;
         const Rig& probZ(int,double&,double&) const;
