@@ -30,7 +30,7 @@ Rig& Rig::gate(int index, std::function<unitary> f, int by, bool ifset)
             };
         }
     }
-
+# pragma omp parallel for
     for (int i=0; i < m_length; ++i)
     {
         if (check(i))

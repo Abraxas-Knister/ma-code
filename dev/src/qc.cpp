@@ -3,6 +3,7 @@
 #include <cmath>
 #include <functional>
 #include <iostream>
+#include <omp.h>
 #include <stdexcept>
 #include <string>
 
