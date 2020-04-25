@@ -6,13 +6,15 @@
 
 #include <fstream>
 #include <iomanip>
+#include <iostream>
+#include <string>
 #include <vector>
 
 void write(const std::string &name, const Twosite& calc, std::vector<double>* Vs=nullptr)
 {
     {
         std::ofstream f("data/" + name + "-gf");
-        f << std::setprecision(15) << calc.greensfunction;
+        f << std::setprecision(15) << *calc.greensfunction;
     }
     if (Vs)
     {
@@ -31,19 +33,17 @@ int main ()
 
     // invocation of the calculator
     std::vector<double> vv;
-    converge(&vv,calc,diagonalizer,1e-7);
+    converge(&vv,calc,diagonalizer,1e-3,10000);
 
     // mode is now no longer needed
     delete diagonalizer;
 
-    // the result of the calculation is stored in the calc
-    std::ofstream fG("data/mat-gf");
-    fG << std::setprecision(15) << *calc.greensfunction;
-
-    // the calculation routine can store the history of the parameter
-    std::ofstream vvec("data/mat-converg");
-    vvec << std::setprecision(15);
-    for (auto i:vv) vvec << i <<'\n';
+    /* the result of the calculation is stored in the calc
+     * and the calculation method can store the convergence
+     * of the parameters
+     */
+    write("mat",calc,&vv);
+    vv.clear();
 
     return 0;
 }

@@ -23,6 +23,8 @@ struct Twosite
     double timestep() const;
 };
 
-void converge(std::vector<double>* const,Twosite&,Setup*,const double,double=5e-3,const int=500);
+void converge(std::vector<double>* const,Twosite&,Setup*,
+              double,const int,
+              const double=1e-5,const int=500);
 
 #endif // guard

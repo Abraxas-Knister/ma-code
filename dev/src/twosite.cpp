@@ -21,7 +21,8 @@ void Twosite::compute(const double step, const int counts)
 
 void converge( std::vector<double>* const ret,
                Twosite& calc, Setup* s,
-               const double prec, double step, const int maxiter)
+               double step, const int counts,
+               const double prec, const int maxiter)
 {
     if (!s)
           throw "trying to converge with no method";
@@ -38,7 +39,7 @@ void converge( std::vector<double>* const ret,
 
     do {
         oldV=curV;
-        calc.compute(step);
+        calc.compute(step,counts);
         calc.ckparams(curV);
         s->set(s->getU(),curV);
         step = calc.timestep();
