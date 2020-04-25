@@ -10,9 +10,7 @@ class Qmeth : public Setup
     QC::Rig* rig;
     Qmeth& prepare();
     Qmeth& trotterstep(double);
-    Qmeth& evolve(double,int);
-    complex part(QC::unitary*,QC::unitary*,double,int);
-    complex full(double,int);
+    Fourier::spec_t part(QC::unitary*,QC::unitary*,double,int);
 public:
     Qmeth(double u, double v) : Setup(u,v) , rig(new QC::Rig(5)) {}
     ~Qmeth() { delete rig; }

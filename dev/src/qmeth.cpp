@@ -2,6 +2,7 @@
 
 #include "dense-ed.hpp"
 #include "gates.hpp"
+#include "qc-stash.hpp"
 
 #include <map>
 

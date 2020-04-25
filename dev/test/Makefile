@@ -3,7 +3,7 @@ SRC = $(shell ls *.cpp)
 
 .PHONY: all clean dep
 
-all: fourier.test qbit.test qcrig.test random.test
+all: fourier.test qbit.test qcrig.test stash.test random.test
 
 clean:
 	-rm .depend
@@ -29,6 +29,9 @@ qcrig.test: qcrig.o \
 
 random.test: random.o \
 	../src/random.o
+
+stash.test: stash.o \
+	../src/qc.o
 
 %.o: %.cpp
 	$(CC) $(OP) -c $<

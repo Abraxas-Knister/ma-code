@@ -38,6 +38,11 @@ namespace QC
 
         Rig& gate(int, std::function<unitary>, int=-1, bool=true);
         Rig& gate(int, std::function<unitary>, double, int=-1, bool=true);
+
+        friend class Stash;
+        /* this class can store a state and reintroduce it to speed up some
+         * things
+         */
     };
     unitary X, Y, Z, H;
 }
