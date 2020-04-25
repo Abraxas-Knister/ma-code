@@ -13,8 +13,11 @@ Qmeth& Qmeth::prepare()
 
     // obtain gdstate
     auto gd { DenseED(U,V).gdstate() };
+
     // obtain data to write to
     auto store { rig->bad() };
+
+    // obtain transform mapping
     /* new state is no longer for
      *     I↓ I↑ B↓ B↑
      * but for
@@ -42,6 +45,8 @@ Qmeth& Qmeth::prepare()
             transform[i] = j;
         }
     }
+
+    // do the roar
     for (auto m{transform.begin()};m!=transform.end();++m)
     {
         store[m->second] = gd(m->first);
@@ -50,7 +55,11 @@ Qmeth& Qmeth::prepare()
     return *this;
 }
 
-complex Qmeth::part(QC::unitary* first, QC::unitary* second, double step, int counts)
+Fourier::spec_t Qmeth::part
+                (
+                    QC::unitary* first, QC::unitary* second,
+                    double step, int counts
+                )
 {
     /* The full greensfunction is
      *
@@ -62,41 +71,26 @@ complex Qmeth::part(QC::unitary* first, QC::unitary* second, double step, int co
      *   ( or <S U^+ P U> which is the conjugate )
      *  where P,S are either of X,Y. These are computed here
      */
+    Fourier::spec_t ret(counts);
+
     prepare();
     rig->gate(0,QC::H).gate(1,first,0,false);
-    evolve(step,counts);
-    rig->gate(1,second,0,true).gate(0,QC::H);
 
-    double u,d;   complex r;
-    rig->probZ(0,u,d);   r  = d-u;
-    rig->probY(0,u,d);   r += IU*(d-u);
-    return r;
-}
-
-complex Qmeth::full(double step, int counts)
-{
-    /*  summands of c(t)c^+(0)
-     *
-     *    + U^+ X U X
-     *  - i U^+ X U Y
-     *  + i U^+ Y U X
-     *    + U^+ Y U Y
-     *
-     *  summands of c^+(0)c(t)
-     *
-     *    + X U^+ X U conjugate of    + U^+ X U X
-     *  + i X U^+ Y U conjugate of  - i U^+ Y U X
-     *  - i Y U^+ X U conjugate of  + i U^+ X U Y
-     *    + Y U^+ Y U conjugate of    + U^+ Y U Y
-     *
-     * 
-     */
-    complex
-        XX = part(QC::X,QC::X,step,counts),
-        XY = part(QC::X,QC::Y,step,counts),
-        YX = part(QC::Y,QC::X,step,counts),
-        YY = part(QC::Y,QC::Y,step,counts);
-    return
-        -IU*2.0*(XX + YY).real()
-           +2.0*(YX - XY).real();
+    QC::Stash stash(*rig);
+    for (int i{ 0 }; i<counts; ++i)
+    {
+        trotterstep(step);
+        stash.save();
+        rig->gate(1,second,0,true).gate(0,QC::H);
+        double u,d;   complex r;
+        rig->probZ(0,u,d);   r  = d-u;
+        rig->probY(0,u,d);   r += IU*(d-u);
+         /* the greens function only need real part
+          * so we might as well only compute it (?)
+          * just compute it anyways
+          */
+        ret[i] = r;
+        stash.apply();
+    }
+    return ret;
 }
