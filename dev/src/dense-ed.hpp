@@ -42,7 +42,7 @@ private:
 
     void setGdstate();
 public:
-    const state_t& gdstate() const { return groundstate; }
+    const state_t gdstate() const { return groundstate; }
 };
 
 #endif // guard

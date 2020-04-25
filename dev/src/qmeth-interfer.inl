@@ -22,10 +22,10 @@ Qmeth& Qmeth::prepare()
      * A (ancillary) is ↓
      */
     static std::map<int,int> transform;
-    static bool first = true;
-    if (first)
+    static bool ini = true;
+    if (ini)
     {
-        first = false;
+        ini = false;
         for (int i{ 0 }; i<16; ++i)
         {
             /* new mask has:
@@ -43,7 +43,10 @@ Qmeth& Qmeth::prepare()
         }
     }
     for (auto m{transform.begin()};m!=transform.end();++m)
-          store[m->second] = gd[m->first];
+    {
+        store[m->second] = gd(m->first);
+        store[m->second|1] = 0.0;
+    }
     return *this;
 }
 
