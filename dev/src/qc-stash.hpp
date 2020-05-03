@@ -18,6 +18,7 @@ namespace QC
         ~Stash() { delete[] m_sto; }
         void save()
         {
+            if (m_sto) return;
             m_sto = new complex[m_rig.m_length];
             for (int i{ 0 }; i<m_rig.m_length; ++i)
                   m_sto[i] = m_rig.m_memory[i];

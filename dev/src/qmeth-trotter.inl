@@ -31,8 +31,8 @@ Qmeth& Qmeth::trotterstep(double step)
      *     +  X->Y )
      */
     QC::XX(*rig,1,2,-V/2.0*step);
-    QC::XX(*rig,3,4,-V/2.0*step);
     QC::YY(*rig,1,2,-V/2.0*step);
+    QC::XX(*rig,3,4,-V/2.0*step);
     QC::YY(*rig,3,4,-V/2.0*step);
     QC::ZZ(*rig,1,3,-U/4.0*step);
     return *this;
