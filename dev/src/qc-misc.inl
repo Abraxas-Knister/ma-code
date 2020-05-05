@@ -11,7 +11,9 @@ std::string bin(int m, int width)
 std::ostream& operator<< (std::ostream& out,const Rig& r)
 {
     for (int i=0; i < r.m_length - 1; ++i)
-          out << bin(i , r.m_bits) << " : " << r.m_memory[i] << '\n';
+          out << bin(i , r.m_bits) << ' '
+              << r.m_memory[i].real() << ' '
+              << r.m_memory[i].imag() << '\n';
     return out;
 }
 /* measure the X,Y,Z projection of spin "index" without projecting

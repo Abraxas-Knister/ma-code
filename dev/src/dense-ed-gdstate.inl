@@ -10,7 +10,7 @@ void DenseED::setGdstate()
             return;
         }
     }
-    throw "Couldn't find groundstate with two particles.";
+    throw "Couldn't find spin symmetric groundstate.";
 }
 
 bool checktwo(const Eigen::MatrixXcd &m, const int col)
@@ -19,10 +19,8 @@ bool checktwo(const Eigen::MatrixXcd &m, const int col)
     {
         switch (i) {
             case 3:
-            case 5:
             case 6:
             case 9:
-            case 10:
             case 12:
                 if (!areNear(std::abs(m(i,col)))) { return true; }
         }
