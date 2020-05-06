@@ -10,21 +10,24 @@
 struct Twosite
 {
     Setup* setup;
-    Fourier* greensfunction;
+    std::vector<complex> greensfunction;
+    double tstep = 0.0;
 
     Twosite()
-        : setup(nullptr) ,
-          greensfunction(nullptr)
+        : setup(nullptr)
     { }
-    virtual ~Twosite();
 
-    void compute(const double step=1e-6, const int counts=10000);
-    void ckparams(double&) const;
-    double timestep() const;
+    virtual void compute(const double step=1e-6, const int counts=10000)
+    {
+        tstep = step;
+        greensfunction = setup->green(step,counts);
+    }
+    virtual void ckparams(double&);
 };
 
-void converge(std::vector<double>* const,Twosite&,Setup*,
-              double,const int,
+/* void converge(std::vector<double>* const,Twosite&,Setup*,
+              const int,
               const double=1e-5,const int=500);
+*/
 
 #endif // guard

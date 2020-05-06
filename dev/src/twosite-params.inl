@@ -1,53 +1,73 @@
-double selfenergy(int,const Twosite&);
-void Twosite::ckparams(double &V) const
+double res_model(const std::pair<double,double> &dat,
+                 const dlib::matrix<double,3,1> &par)
 {
-    // Want d/dw Re(S) | w=0
-    /* That's hopefully the same as
-     *
-     *  real(
-     *    Self(freqdep[1]) - Self(freqdep[0])
-     *   ) / ( freq[0] )
-     *
-     * since freqdep and freq store the positive freqs first
-     *
-     * Need to calculate Self energy at freq[2] and freq[1] since freq[0] is 0
-     * to avoid devide by 0.
-     */
-    const double dw { greensfunction->valsFreq()[1] };
-    const double
-        self_1 {selfenergy(1,*this)},
-        self_2 {selfenergy(2,*this)};
-    const double
-        dself {self_2 - self_1};
-    double newV { 1.0/(1.0 - dself/dw) };
-/* DEB */  //  static int huhct = 0;
-/* DEB */  //  if (newV<0) { std::cerr << "=== neg mass: " << ++huhct << " ===\n"; }
-    V = sqrt(std::fabs(newV));
+    return (par(0)-1.0)*std::cos(dat.first/par(1))
+           -par(0)     *std::cos(dat.first/par(2))
+                                      - dat.second;
 }
 
-double selfenergy(int i, const Twosite &G)
+double guessa(const std::vector<std::pair<double,double>>&,const double);
+double guessb(double,const std::vector<std::pair<double,double>>&);
+double guessc(double,const std::vector<std::pair<double,double>>&,const double,const double);
+#include "twosite-guess.inl"
+
+double qpartmass(double,double,double,double);
+double timestep(double,double);
+
+void Twosite::ckparams(double &V)
 {
-    // G0**-1 = w + mu - V**2 / w
-    // S = G0**-1 - G**-1
-    const double
-        w = G.greensfunction->valsFreq()[i] ,
-        g = G.greensfunction->specFreq()[i].real();
-    return w + G.setup->getU()/2 - (G.setup->getV()*G.setup->getV())/w - 1.0/g;
+    /* This method will change V to the hybridisation that is in agreement with
+     * the data in "greensfunction" in assumption that is is sampled in
+     * timesteps of tstep difference beginning at 0.
+     *
+     * It will try to set a new tstep.
+     */
+
+    /* the model function for the greensfunction is:
+     *
+     *  - i ( (a-1) cos (t/b) - a cos(t/c) )
+     */
+
+    // get imag
+    std::vector<std::pair<double,double>> scale;
+    {
+        int ct=-1;
+        for (auto i:greensfunction)
+              scale.push_back( std::make_pair(++ct*tstep,i.imag()) );
+    }
+    // get first guess for b, then a, then c
+    double a, b = guessb(0.1,scale)*tstep, c;
+    if (!b) {
+        a = guessa(scale,b);
+        c = guessc(a*0.5,scale,a,b)*tstep;
+        dlib::matrix<double,3,1> par = {a,b,c};
+        dlib::solve_least_squares_lm(dlib::objective_delta_stop_strategy(1e-7),
+            res_model,dlib::derivative(res_model),scale,par);
+        a = par(0); b = par(1); c = par(2);
+        double newV = std::sqrt(qpartmass(a,b,c,V));
+        if (std::isnormal(newV))
+              V = newV;
+        tstep = timestep(a,b);
+    } else {
+        tstep *= 10.0;
+    }
 }
 
-double Twosite::timestep() const
+double qpartmass(double a, double b, double c, double V)
 {
-    /* find freqency with maximal weight
-     * compute a timestep such that
-     * this frequency gets some support points
-     * return that timestep
+    /* fourier transforming the model leads to
+     *    G(w)   = (
+     * the self energy is
+     *    S(w)   =  1/G0(w) - 1/G(w)
+     * with
+     *    G0(w)  =  1/(w + mu - V/w)
+     * which means that
+     *    dS/dw | w=0
+     *           =
+     * and therefore
+     *    Z      = 
      */
-    const auto absComp { [] (const complex& a, const complex& b) -> bool
-        { return std::norm(a) < std::norm(b); }
-    };
-    const auto& f{greensfunction->specFreq()};
-    const auto max { std::max_element(f.begin(), f.begin() + f.size()/2 , absComp) };
-    const auto maxIndex { std::distance(f.begin(),max) };
-    const double freq { greensfunction->valsFreq()[maxIndex] };
-    return 1.0/(200*freq);
+    return 1.0;
 }
+
+double timestep(double,double);
